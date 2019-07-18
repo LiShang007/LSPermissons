@@ -1,4 +1,8 @@
 ## 一款简单的Android权限检测库
+引用：
+    
+    implementation 'com.lishang:LSPermissions:1.0.0'
+使用：
 
 
       LSPermissions.request(this, new OnPermissionListener() {

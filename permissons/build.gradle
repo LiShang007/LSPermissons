@@ -44,7 +44,7 @@ publish {
     artifactId = 'LSPermissions'
     publishVersion = '1.0.0'
     desc = 'Android 权限检测'
-    website = 'https://github.com/LiShang007/CheckIn'
+    website = 'https://github.com/LiShang007/LSPermissons'
 }
 
 task javadoc(type: Javadoc) {

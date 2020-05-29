@@ -1,14 +1,15 @@
-package com.lishang.permissions;
+package com.lishang.permissions.compat;
 
 
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.os.Binder;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.Size;
-import android.support.v4.app.AppOpsManagerCompat;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.Size;
+import androidx.core.app.AppOpsManagerCompat;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -125,15 +126,6 @@ public class CheckPermissionCompat {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static int checkSelfPermission(Context context, @Size(min = 1) @NonNull String... perms) {
-        for (String perm : perms) {
-            int code = checkSelfPermission(context, perm);
-            if (code != AppOpsManagerCompat.MODE_ALLOWED) {
-                return AppOpsManagerCompat.MODE_IGNORED;
-            }
-        }
-        return AppOpsManagerCompat.MODE_ALLOWED;
-    }
+
 
 }

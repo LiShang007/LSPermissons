@@ -1,24 +1,64 @@
 ## 一款简单的Android权限检测库
 引用：
     
-    implementation 'com.lishang:LSPermissions:1.0.0'
+    implementation 'com.lishang:LSPermissions:1.0.1'
 使用：
 
+    LSPermissions.with(this)
+                .permissions(Manifest.permission.CALL_PHONE, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS, Manifest.permission.READ_PHONE_STATE)
+                .onBefore(new OnBeforeListener() {
+                    @Override
+                    public void onBefore(final Request request, String... perms) {
+                        PermissionDialog.showApplyDialog(MainActivity.this, "缺失必要权限,是否申请?", new OnActionListener() {
+                            @Override
+                            public void onConfirm() {
+                                request.execute();
+                            }
 
-      LSPermissions.request(this, new OnPermissionListener() {
-            @Override
-            public void onResult(PermissionResult result) {
-                String str = "";
-                if (result.granted) {
-                    str = "申请权限成功";
-                } else if (result.shouldShowRequestPermissionRationale) {
-                    str = "拒绝权限";
-                } else {
-                    str = "不再提示";
-                }
-                Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
-            }
-        }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+                            @Override
+                            public void onCancel() {
+                                request.cancel();
+                            }
+                        });
+                    }
+                })
+                .onAllGranted(new OnAllGrantedListener() {
+                    @Override
+                    public void onAllGranted() {
+                        log("所以权限申请成功");
+                        toast("所以权限申请成功");
+                    }
+                })
+                .onGranted(new OnGrantedListener() {
+                    @Override
+                    public void onGranted(List<String> perms) {
+                        log(perms.toString() + "权限申请成功");
+
+                        toast(perms.toString() + "权限申请成功");
+                    }
+                })
+                .onDenied(new OnDeniedListener() {
+                    @Override
+                    public void onDenied(final Request request, List<String> perms, List<String> permanentlyDeniedPerms) {
+
+                        toast("被拒绝的权限：" + perms.toString() + "\n" + "永久拒绝的权限：" + permanentlyDeniedPerms.toString());
+
+                        PermissionDialog.showSettingDialog(MainActivity.this, "权限被拒绝，请去设置里打开", new OnActionListener() {
+                            @Override
+                            public void onConfirm() {
+                                request.setting();
+                            }
+
+                            @Override
+                            public void onCancel() {
+                                request.cancel();
+                            }
+                        });
+
+                    }
+                })
+                .start();
+      
 
 
 通过内部封装了一个Fragment用于权限申请，免于在每次使用时重写onRequestPermissionsResult，导致代码阅读不流畅。
